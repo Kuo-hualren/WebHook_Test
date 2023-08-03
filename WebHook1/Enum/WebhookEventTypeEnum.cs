@@ -8,5 +8,6 @@
         public const string Unfollow = "unfollow";
         public const string Join = "join";
         public const string Leave = "leave";
-    }
+		public const string VideoPlayComplete = "videoPlayComplete"; 
+	}
 }

@@ -24,16 +24,66 @@ namespace WebHook1.Domain
         
         }
 
-        public void ReplyMessageHandler<T>(string messageType, ReplyMessageRequestDto<T> requestBody)
+		/// 接收到廣播請求時，在將請求傳至 Line 前多一層處理，依據收到的 messageType 將 messages 轉換成正確的型別，這樣 Json 轉換時才能正確轉換。
+		/// </summary>
+		/// <param name="messageType"></param>
+		/// <param name="requestBody"></param>
+		public void BroadcastMessageHandler(string messageType, object requestBody)
+		{
+			string strBody = requestBody.ToString();
+			dynamic messageRequest = new BroadcastMessageRequestDto<BaseMessageDto>();
+			switch (messageType)
+			{
+				case MessageTypeEnum.Text:
+					messageRequest = _jsonProvider.Deserialize<BroadcastMessageRequestDto<TextMessageDto>>(strBody);
+					break;
+				case MessageTypeEnum.Sticker:
+					messageRequest = _jsonProvider.Deserialize<BroadcastMessageRequestDto<StickerMessageDto>>(strBody);
+					break;
+				case MessageTypeEnum.Image:
+					messageRequest = _jsonProvider.Deserialize<BroadcastMessageRequestDto<ImageMessageDto>>(strBody);
+					break;
+				case MessageTypeEnum.Video:
+					messageRequest = _jsonProvider.Deserialize<BroadcastMessageRequestDto<VideoMessageDto>>(strBody);
+					break;
+
+			}
+            BroadcastMessage(messageRequest);
+
+		}
+
+		// <summary>
+		// 將廣播訊息請求送到 Line
+		// <typeparam name="T"></typeparam>
+		// <param name="request"></param>
+		public async void BroadcastMessage<T>(BroadcastMessageRequestDto<T> request)
+		{
+			client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+			client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", channelAccessToken); //帶入 channel access token
+			var json = _jsonProvider.Serialize(request);
+			var requestMessage = new HttpRequestMessage
+			{
+				Method = HttpMethod.Post,
+				RequestUri = new Uri(broadcastMessageUri),
+				Content = new StringContent(json, Encoding.UTF8, "application/json")
+			};
+
+			var response = await client.SendAsync(requestMessage);
+			Console.WriteLine(await response.Content.ReadAsStringAsync());
+		}
+
+		// <summary>
+		// 接收到回覆請求時，在將請求傳至 Line 前多一層處理(目前為預留)
+		// </summary>
+		public void ReplyMessageHandler<T>(string messageType, ReplyMessageRequestDto<T> requestBody)
         {
             ReplyMessage(requestBody);
         }
 
-        /// <summary>
-        /// 將回覆訊息請求送到 Line
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="request"></param>    
+        // <summary>
+        // 將回覆訊息請求送到 Line
+        // <typeparam name="T"></typeparam>
+        // <param name="request"></param>    
         public async void ReplyMessage<T>(ReplyMessageRequestDto<T> request)
         {
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -59,14 +109,16 @@ namespace WebHook1.Domain
                 {
                     case WebhookEventTypeEnum.Message:
                         Console.WriteLine($"收到使用者傳送訊息！ {eventObject.Message.Text}");
-                        //var v = Int32.Parse(eventObject.Message.Text) * 10;
-                        var replyMessage = new ReplyMessageRequestDto<TextMessageDto>()
+						Console.WriteLine($"收到使用者傳送訊息！ {eventObject.Source.UserId}");
+						//var v = Int32.Parse(eventObject.Message.Text) * 10;
+						var replyMessage = new ReplyMessageRequestDto<TextMessageDto>()
                         {
                             ReplyToken = eventObject.ReplyToken,
                             Messages = new List<TextMessageDto>
                             {
-                                new TextMessageDto(){Text = $"{eventObject.Message.Text}"}
-                            }
+                                new TextMessageDto(){Text = $"{eventObject.Message.Text}"},
+								new TextMessageDto(){Text = $"{eventObject.Source.UserId}"}
+							}
                         };
                         ReplyMessageHandler("text", replyMessage);
                         break;
@@ -85,7 +137,19 @@ namespace WebHook1.Domain
                     case WebhookEventTypeEnum.Leave:
                         Console.WriteLine("我們被聊天室踢出了");
                         break;
-                }
+                    case WebhookEventTypeEnum.VideoPlayComplete:
+						Console.WriteLine("收到使用者傳送訊息");
+						//replyMessage = new ReplyMessageRequestDto<TextMessageDto>()
+						//{
+						//	ReplyToken = eventObject.ReplyToken,
+						//	Messages = new List<TextMessageDto>
+						//	{
+						//		new TextMessageDto(){Text = $"sssssss"}
+						//	}
+						//};
+						//ReplyMessageHandler("text", replyMessage);
+						break;
+				}
             }
         }
     }

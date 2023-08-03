@@ -10,8 +10,10 @@
         public DeliverycontextDto DeliveryContext { get; set; } // 是否為重新傳送之事件 DeliveryContext.IsRedelivery : true | false
         public string? ReplyToken { get; set; } // 回覆此事件所使用的 token
         public MessageEventDto Message { get; set; } // 收到訊息的事件，可收到 text、sticker、image、file、video、audio、location 訊息
-        
-    }
+        public UnsendEventObjectDto? Unsend { get; set; } //使用者“收回”訊息事件
+		public VideoViewingCompleteEventDto? VideoPlayComplete { get; set; } // Video viewing complete event
+
+	}
     public class SourceDto
     {
         public string Type { get; set; }
@@ -38,7 +40,10 @@
         public string? Address { get; set; }
         public double? Latitude { get; set; }
         public double? Longitude { get; set; }
-    }
+		public ContentProviderDto? ContentProvider { get; set; }
+		public ImageMessageEventImageSetDto? ImageSet { get; set; }
+		public int? Duration { get; set; } // 影片 or 音檔時長(單位：豪秒)
+	}
 
     public class TextMessageEventEmojiDto
     {
@@ -60,4 +65,26 @@
         public int Length { get; set; }
         public string UserId { get; set; }
     }
+
+    public class ContentProviderDto
+    {
+        public string Type { get; set; }
+		public string? OriginalContentUrl { get; set; }
+		public string? PreviewImageUrl { get; set; }
+	}
+	public class ImageMessageEventImageSetDto
+	{
+		public string? Id { get; set; }
+		public string? Index { get; set; }
+		public string? Total { get; set; }
+	}
+	public class UnsendEventObjectDto
+	{
+		public string messageId { get; set; }
+	}
+	public class VideoViewingCompleteEventDto
+	{
+		public string? TrackingId { get; set; }
+	}
+
 }

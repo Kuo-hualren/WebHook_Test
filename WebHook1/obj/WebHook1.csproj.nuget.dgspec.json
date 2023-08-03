@@ -1,20 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\anny2\\OneDrive\\桌面\\WebHook1\\WebHook1\\WebHook1.csproj": {}
+    "D:\\Blazor\\WebHook1\\WebHook1\\WebHook1.csproj": {}
   },
   "projects": {
-    "C:\\Users\\anny2\\OneDrive\\桌面\\WebHook1\\WebHook1\\WebHook1.csproj": {
+    "D:\\Blazor\\WebHook1\\WebHook1\\WebHook1.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\anny2\\OneDrive\\桌面\\WebHook1\\WebHook1\\WebHook1.csproj",
+        "projectUniqueName": "D:\\Blazor\\WebHook1\\WebHook1\\WebHook1.csproj",
         "projectName": "WebHook1",
-        "projectPath": "C:\\Users\\anny2\\OneDrive\\桌面\\WebHook1\\WebHook1\\WebHook1.csproj",
-        "packagesPath": "C:\\Users\\anny2\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\anny2\\OneDrive\\桌面\\WebHook1\\WebHook1\\obj\\",
+        "projectPath": "D:\\Blazor\\WebHook1\\WebHook1\\WebHook1.csproj",
+        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
+        "outputPath": "D:\\Blazor\\WebHook1\\WebHook1\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
         "configFilePaths": [
-          "C:\\Users\\anny2\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -22,7 +25,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\sdk\\7.0.302\\Sdks\\Microsoft.NET.Sdk.Web\\library-packs": {},
+          "C:\\Program Files\\dotnet\\sdk\\7.0.304\\Sdks\\Microsoft.NET.Sdk.Web\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -73,7 +76,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.302\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.304\\RuntimeIdentifierGraph.json"
         }
       }
     }

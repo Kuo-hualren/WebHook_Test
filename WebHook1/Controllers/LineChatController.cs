@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
@@ -20,12 +21,21 @@ namespace WebHook1.Controllers
             _lineBotService = new LineBotService();
         }
 
-        [Microsoft.AspNetCore.Mvc.HttpPost("Webhook")]
+		[Microsoft.AspNetCore.Mvc.HttpPost("SendMessage/Broadcast")]
+		public IActionResult Broadcast([Required] string messageType, object body)
+		{
+			_lineBotService.BroadcastMessageHandler(messageType, body);
+			return Ok();
+		}
+
+		[Microsoft.AspNetCore.Mvc.HttpPost("Webhook")]
         public IActionResult Webhook(WebhookRequestBodyDto body)
         {
             _lineBotService.ReceiveWebhook(body); // 呼叫 Service
             return Ok();
         }
 
-    }
+		
+
+	}
 }
