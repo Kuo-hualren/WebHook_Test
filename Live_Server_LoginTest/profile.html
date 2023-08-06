@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>讓 C# 也能很 Social 用戶資料</title>
+    <!-- jquery CDN incluer -->
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js"
+        integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+    <!-- CSS include -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="topnav">
+        <a href="https://cccf-61-63-154-173.jp.ngrok.io/login.html">Line Login</a>
+        <a href="https://cccf-61-63-154-173.jp.ngrok.io/profile.html">User Profile</a>
+        <a href="#">Line Pay</a>
+    </div>
+    <script>
+        let baseLoginApiUrl = 'https://localhost:8080/api/LineLogin/';
+        // 頁面載入時，就是登入後 Line 透過 callback 帶回資料
+        // 此時開始取得使用者資料
+        window.onload = function () {
+            const params = new Proxy(new URLSearchParams(window.location.search), {
+                get: (searchParams, prop) => searchParams.get(prop),
+            });
+            let code = params.code;
+            let state = params.state;
+
+            if (code == null || state == null) return;
+            //驗證 state
+
+            //取得 login info
+            $.get({
+                url: baseLoginApiUrl + `Tokens?authToken=${code}&callbackUrl=${window.location.toString().split("?")[0]}`,
+                dataType: 'json',
+                contentType: 'application/json',
+                success: function (res) {
+                    // 使用 access token 取回使用者資料
+                    $.get({
+                        url: baseLoginApiUrl + `Profile/${res.access_token}`,
+                        dataType: 'json',
+                        contentType: 'application/json',
+                        success: function (res) {
+                            $("#user_avatar").attr("src", res.pictureUrl);
+                            $("#user_name").text('姓名 : ' + res.displayName);
+                            $("#user_id").text('使用者ID : ' + res.userId);
+                            $("#user_status").text('狀態文字 : ' + res.statusMessage);
+                        }
+                    });
+                },
+            })
+        }
+        console.log(baseLoginApiUrl);
+    </script>
+    <center>
+        <div class="container">
+            <a><img id="user_avatar" src=""></image></a>
+            <a><a id="user_name">姓名 : </a></a>
+            <a><a id="user_id">使用者ID : </a></a>
+            <a><a id="user_status"> </a></a>
+        </div>
+    </center>
+</body>
+</html>

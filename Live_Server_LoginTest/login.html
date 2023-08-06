@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>2022 iThome 鐵人賽 - 讓 C# 也能很 Social</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- jquery CDN include -->
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js"
+        integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+    <!-- CSS include -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- 最上方的 bar -->
+    <div class="topnav">
+        <a href="https://cccf-61-63-154-173.jp.ngrok.io/login.html">Line Login</a>
+        <a href="https://6cb5-2402-7500-5d1-3aa5-109c-b58f-22c0-a00d.ngrok-free.app/profile.html">User Profile</a>
+        <a href="#">Line Pay</a>
+    </div>
+    <!-- 按鈕 -->
+    <div class="container">
+        <!-- 使用了三個 function，分別為：滑鼠移入時切換圖片、滑鼠移出時切換圖片、被點擊時送出登入請求 -->
+        <input type="image" src="images/btn_login_base.png" onmousemove="hover(this)" onmouseout="unhover(this)"
+            onclick="login()">
+    </div>
+    <script>
+        let baseLoginApiUrl = 'https://localhost:8080/api/LineLogin/'
+        // 登入 function
+        function login() {
+            // 向我們的伺服器送出 request，取得 Line Login 頁面網址。
+            $.get({
+                url: baseLoginApiUrl + 'Url' + "?redirectUrl=https://6cb5-2402-7500-5d1-3aa5-109c-b58f-22c0-a00d.ngrok-free.app/profile.html",
+                contentType: "application/json;charset=utf-8",
+                success: function (result) {
+                    window.location = result; //取得網址並跳轉。
+                },
+                
+            })
+            // alert("請輸入用戶名！");
+            //window.location.href="https://www.youtube.com/watch?v=Ut9cbXYWETI";
+        }
+
+        // 變更圖片 function
+        function hover(element) {
+            element.setAttribute('src', 'images/btn_login_hover.png');
+        }
+        function unhover(element) {
+            element.setAttribute('src', 'images/btn_login_base.png');
+        }
+    </script>
+</body>
+
+</html>
